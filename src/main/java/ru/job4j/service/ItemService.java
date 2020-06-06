@@ -29,10 +29,6 @@ public class ItemService {
         return ITEM_STORE.getActiveItems();
     }
 
-    public Item findItem(Item item) {
-        return ITEM_STORE.getItem(item);
-    }
-
     public void deleteItem(Integer id) {
         ITEM_STORE.delete(id);
     }
