@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo list</title>
+</head>
+<body>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script>
+
+    var all = 'http://localhost:8080/todo/all';
+    var allactive = 'http://localhost:8080/todo/allactive';
+
+    window.addEventListener("load",function(){
+        check();
+    });
+
+    function check() {
+        if (document.getElementById("show-all").checked) {
+            loadItems(all);
+        } else {
+            loadItems(allactive);
+        }
+    }
+
+    function showRows(url) {
+        $.ajax(url).done(function (data) {
+            var result = "";
+            for (var i = 0; i < data.length; i++) {
+                var row = data[i];
+                if (row.done) {
+                    result += "<tr class=\"done\">"
+                        + "<td>" + row.id + "</td>"
+                        + "<td>" + row.desc + "</td>"
+                        + "<td>" + row.created + "</td>"
+                        + "<td>"
+                        + "<button type=\"button\" class=\"btn btn-success\" onclick=\"doneItem("
+                        + row.id + ")\">Сделал</button>"
+                        + "</td>"
+                        + "<td>"
+                        + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
+                        + row.id + ")\">Удалить задачу</button>"
+                        + "</td>"
+                        + "</tr>"
+                } else {
+                    result += "<tr>"
+                        + "<td>" + row.id + "</td>"
+                        + "<td>" + row.desc + "</td>"
+                        + "<td>" + row.created + "</td>"
+                        + "<td></td>"
+                        + "<td>"
+                        + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
+                        + row.id + ")\">Удалить задачу</button>"
+                        + "</td>"
+                        + "</tr>"
+                }
+                $("#items").html(result);
+            }
+        })
+    }
+
+    function loadItems(url) {
+        $.ajax({
+            url: url,
+            cache: false,
+            datatype: 'json',
+            contentType: 'application/json;charset=UTF-8'
+        }).done(
+            showRows(url)
+        ).fail(function (err) {
+            console.log(err);
+        });
+    }
+
+    function addItem() {
+        var description = $("#task").val();
+        console.log(JSON.stringify(description));
+        $.ajax({
+            url: "http://localhost:8080/todo/add",
+            cache: false,
+            datatype: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                "item": JSON.stringify(description)
+            },
+            success: function () {
+                check();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Error... " + textStatus + " " + errorThrown);
+                check();
+            }
+        })
+    }
+
+    function doneItem(id) {
+        $.ajax({
+            url: "http://localhost:8080/todo/done",
+            cache: false,
+            datatype: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                "id": JSON.stringify(id)
+            },
+            success: function () {
+                check();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Error... " + textStatus + " " + errorThrown);
+                check();
+            }
+        })
+    }
+
+    function deleteItem(id) {
+        $.ajax({
+            url: "http://localhost:8080/todo/del",
+            cache: false,
+            datatype: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            data: {
+                "id": JSON.stringify(id)
+            },
+            success: function () {
+                check();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Error... " + textStatus + " " + errorThrown);
+                check();
+            }
+        })
+    }
+
+</script>
+
+<h3 style="text-align: center">Список заданий на сегодня</h3>
+<h5 style="text-align: center"><label class="checkbox"><input type="checkbox" id="show-all" onclick="check()">Показать
+    все
+    задания/Только выполненные</label></h5>
+
+<form>
+    <div class="form-row">
+        <div class="form-group col-md-9">
+            <input type="text" class="form-control" id="task" aria-describedby="taskHelp"
+                   placeholder="Описание задачи">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary" onclick="addItem()">Добавить задачу</button>
+        </div>
+    </div>
+</form>
+<br>
+<div class="row">
+    <div class="col sm-12">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Выполнено</th>
+                <th scope="col">Удалить</th>
+            </tr>
+            </thead>
+            <tbody id="items">
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
