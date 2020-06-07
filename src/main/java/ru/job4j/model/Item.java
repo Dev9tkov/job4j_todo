@@ -16,6 +16,7 @@ public class Item {
     @Column(name = "description")
     private String desc;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd HH:mm:ss", timezone = "Europe/Moscow")
     private Date created;
 
     private boolean done;

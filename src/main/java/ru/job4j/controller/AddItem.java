@@ -15,6 +15,5 @@ public class AddItem extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String desc = req.getParameter("item");
         service.addItem(new Item(desc, true));
-        System.out.println(desc);
     }
 }

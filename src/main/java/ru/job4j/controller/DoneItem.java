@@ -12,7 +12,6 @@ public class DoneItem extends HttpServlet {
     private final ItemService service = ItemService.getInstance();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setCharacterEncoding("UTF-8");
         Integer id = Integer.valueOf(req.getParameter("id"));
         service.doneItem(id);
     }
