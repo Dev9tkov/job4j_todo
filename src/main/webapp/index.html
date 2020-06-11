@@ -22,9 +22,14 @@
     var all = 'http://localhost:8080/todo/all';
     var allactive = 'http://localhost:8080/todo/allactive';
 
-    window.addEventListener("load",function(){
-        check();
-    });
+    // $(document).ready(function () {
+    //     var id;
+    //     var uri = window.location.href.slice(window.location.href.indexOf('?value=') + 1);
+    //     var array = uri.split("=");
+    //     id = array[1];
+    //     check(id);
+    //     }
+    // );
 
     function check() {
         if (document.getElementById("show-all").checked) {
@@ -73,9 +78,13 @@
     function loadItems(url) {
         $.ajax({
             url: url,
+            type: 'POST',
             cache: false,
             datatype: 'json',
-            contentType: 'application/json;charset=UTF-8'
+            contentType: 'application/json;charset=UTF-8',
+            // data: {
+            //     "id": id
+            // },
         }).done(
             showRows(url)
         ).fail(function (err) {
@@ -85,14 +94,14 @@
 
     function addItem() {
         var description = $("#task").val();
-        console.log(JSON.stringify(description));
         $.ajax({
             url: "http://localhost:8080/todo/add",
             cache: false,
             datatype: 'json',
             contentType: 'application/json;charset=UTF-8',
             data: {
-                "item": JSON.stringify(description)
+                "item": JSON.stringify(description),
+                // "id": id
             },
             success: function () {
                 check();

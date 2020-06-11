@@ -3,6 +3,7 @@ package ru.job4j.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.job4j.model.Item;
+import ru.job4j.model.User;
 import ru.job4j.service.ItemService;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,11 @@ import java.util.List;
 public class AllActiveItem extends HttpServlet {
     private final ItemService service = ItemService.getInstance();
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Item> items = service.findActiveItems();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        System.out.println(user);
+        String id = req.getParameter("id");
+        List<Item> items = service.findActiveItems(Integer.parseInt(id));
         PrintWriter pw = resp.getWriter();
         ObjectMapper map = new ObjectMapper();
         String json = map.writeValueAsString(items);

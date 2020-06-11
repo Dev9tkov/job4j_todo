@@ -21,6 +21,10 @@ public class Item {
 
     private boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Item() {
     }
 
@@ -28,6 +32,21 @@ public class Item {
         this.desc = desc;
         this.done = done;
         this.created = new Date();
+    }
+
+    public Item(String desc, boolean done, User user) {
+        this.desc = desc;
+        this.created = new Date();
+        this.done = done;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Integer getId() {

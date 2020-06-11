@@ -21,12 +21,12 @@ public class ItemService {
         ITEM_STORE.save(item);
     }
 
-    public List<Item> findAllItems() {
-        return ITEM_STORE.getItems();
+    public List<Item> findAllItems(Integer id) {
+        return ITEM_STORE.getItems(id);
     }
 
-    public List<Item> findActiveItems() {
-        return ITEM_STORE.getActiveItems();
+    public List<Item> findActiveItems(Integer id) {
+        return ITEM_STORE.getActiveItems(id);
     }
 
     public void deleteItem(Integer id) {

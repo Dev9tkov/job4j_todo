@@ -6,7 +6,6 @@ import java.io.IOException;
 public class TypeFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override

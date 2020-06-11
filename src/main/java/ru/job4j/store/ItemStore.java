@@ -6,8 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.job4j.model.Item;
 
+import javax.persistence.Query;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ItemStore implements IStore{
 
@@ -48,8 +50,12 @@ public class ItemStore implements IStore{
      * показать все заявки. И выполненные, и нет
      */
     @Override
-    public List<Item> getItems() {
-        return this.tx(session -> session.createQuery("From Item").list());
+    public List<Item> getItems(Integer userId) {
+        return this.tx(session -> {
+            Query query = session.createQuery("FROM ru.job4j.model.Item AS i WHERE i.user.id= :id");
+            query.setParameter("id", userId);
+            return (List<Item>) query.getResultList();
+        });
     }
 
 
@@ -57,8 +63,11 @@ public class ItemStore implements IStore{
      * Показать только те заявки, которые ожидают выполнения
      */
     @Override
-    public List<Item> getActiveItems() {
-        return this.tx(session -> session.createQuery("From Item as I where I.done = true").list());
+    public List<Item> getActiveItems(Integer userId) {
+        return getItems(userId)
+                .stream()
+                .filter(Item::isDone)
+                .collect(Collectors.toList());
     }
 
     @Override

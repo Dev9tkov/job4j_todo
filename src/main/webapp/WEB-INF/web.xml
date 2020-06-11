@@ -52,6 +52,24 @@
     <url-pattern>/done</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>RegestrationServlet</servlet-name>
+    <servlet-class>ru.job4j.controller.RegestrationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegestrationServlet</servlet-name>
+    <url-pattern>/reg</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AuthServlet</servlet-name>
+    <servlet-class>ru.job4j.controller.AuthServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthServlet</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
+
   <filter>
     <filter-name>CorsFilter</filter-name>
     <filter-class>ru.job4j.filter.CorsFilter</filter-class>
@@ -60,6 +78,15 @@
     <filter-name>CorsFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+<!--  <filter>-->
+<!--    <filter-name>AuthFilter</filter-name>-->
+<!--    <filter-class>ru.job4j.filter.AuthFilter</filter-class>-->
+<!--  </filter>-->
+<!--  <filter-mapping>-->
+<!--    <filter-name>AuthFilter</filter-name>-->
+<!--    <url-pattern>/*</url-pattern>-->
+<!--  </filter-mapping>-->
 
   <filter>
     <filter-name>TypeFilter</filter-name>

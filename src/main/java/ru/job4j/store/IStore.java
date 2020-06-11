@@ -7,11 +7,11 @@ import java.util.List;
 public interface IStore {
     void save(Item item);
 
-    List<Item> getItems();
+    List<Item> getItems(Integer id);
 
     void delete(Integer id);
 
-    List<Item> getActiveItems();
+    List<Item> getActiveItems(Integer id);
 
     void doneItem(Integer id);
 
