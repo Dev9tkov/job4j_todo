@@ -12,10 +12,8 @@ public class AddItem extends HttpServlet {
     private final ItemService service = ItemService.getInstance();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+        User user = (User) req.getSession().getAttribute("user");
         String desc = req.getParameter("item");
-        User user = new User();
-        user.setId(Integer.valueOf(id));
         service.addItem(new Item(desc, true, user));
     }
 }

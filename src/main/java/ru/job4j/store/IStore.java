@@ -15,4 +15,6 @@ public interface IStore {
 
     void doneItem(Integer id);
 
+    boolean haveAnyItems(Integer id);
+
 }

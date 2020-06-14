@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            request.getRequestDispatcher("/autor.html").forward(request, response);
+            request.getRequestDispatcher("/auth").forward(request, response);
             return;
         }
         chain.doFilter(request, response);

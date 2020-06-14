@@ -22,15 +22,6 @@
     var all = 'http://localhost:8080/todo/all';
     var allactive = 'http://localhost:8080/todo/allactive';
 
-    // $(document).ready(function () {
-    //     var id;
-    //     var uri = window.location.href.slice(window.location.href.indexOf('?value=') + 1);
-    //     var array = uri.split("=");
-    //     id = array[1];
-    //     check(id);
-    //     }
-    // );
-
     function check() {
         if (document.getElementById("show-all").checked) {
             loadItems(all);
@@ -39,41 +30,43 @@
         }
     }
 
-    function showRows(url) {
-        $.ajax(url).done(function (data) {
+    window.addEventListener("load",function(){
+        check();
+    });
+
+    function showRows(data) {
             var result = "";
-            for (var i = 0; i < data.length; i++) {
-                var row = data[i];
-                if (row.done) {
-                    result += "<tr class=\"done\">"
-                        + "<td>" + row.id + "</td>"
-                        + "<td>" + row.desc + "</td>"
-                        + "<td>" + row.created + "</td>"
-                        + "<td>"
-                        + "<button type=\"button\" class=\"btn btn-success\" onclick=\"doneItem("
-                        + row.id + ")\">Сделал</button>"
-                        + "</td>"
-                        + "<td>"
-                        + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
-                        + row.id + ")\">Удалить задачу</button>"
-                        + "</td>"
-                        + "</tr>"
-                } else {
-                    result += "<tr>"
-                        + "<td>" + row.id + "</td>"
-                        + "<td>" + row.desc + "</td>"
-                        + "<td>" + row.created + "</td>"
-                        + "<td></td>"
-                        + "<td>"
-                        + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
-                        + row.id + ")\">Удалить задачу</button>"
-                        + "</td>"
-                        + "</tr>"
+                for (var i = 0; i < data.length; i++) {
+                    var row = data[i];
+                    if (row.done) {
+                        result += "<tr class=\"done\">"
+                            + "<td>" + row.id + "</td>"
+                            + "<td>" + row.desc + "</td>"
+                            + "<td>" + row.created + "</td>"
+                            + "<td>"
+                            + "<button type=\"button\" class=\"btn btn-success\" onclick=\"doneItem("
+                            + row.id + ")\">Сделал</button>"
+                            + "</td>"
+                            + "<td>"
+                            + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
+                            + row.id + ")\">Удалить задачу</button>"
+                            + "</td>"
+                            + "</tr>"
+                    } else {
+                        result += "<tr>"
+                            + "<td>" + row.id + "</td>"
+                            + "<td>" + row.desc + "</td>"
+                            + "<td>" + row.created + "</td>"
+                            + "<td></td>"
+                            + "<td>"
+                            + "<button type=\"button\" class=\"btn btn-danger\" onclick=\"deleteItem("
+                            + row.id + ")\">Удалить задачу</button>"
+                            + "</td>"
+                            + "</tr>"
+                    }
+                    $("#items").html(result);
                 }
-                $("#items").html(result);
             }
-        })
-    }
 
     function loadItems(url) {
         $.ajax({
@@ -82,14 +75,20 @@
             cache: false,
             datatype: 'json',
             contentType: 'application/json;charset=UTF-8',
-            // data: {
-            //     "id": id
-            // },
-        }).done(
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        }).done(function(url) {
+            if (url.length == 0) {
+                $("#items").html("");
+            }
+            console.log(url);
             showRows(url)
-        ).fail(function (err) {
-            console.log(err);
-        });
+        }).fail(function (err) {
+                console.log(err);
+            });
+
     }
 
     function addItem() {
@@ -99,9 +98,12 @@
             cache: false,
             datatype: 'json',
             contentType: 'application/json;charset=UTF-8',
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
             data: {
                 "item": JSON.stringify(description),
-                // "id": id
             },
             success: function () {
                 check();
@@ -119,11 +121,17 @@
             cache: false,
             datatype: 'json',
             contentType: 'application/json;charset=UTF-8',
+            xhrFields: {
+                withCredentials: true
+            },
             data: {
                 "id": JSON.stringify(id)
             },
-            success: function () {
-                check();
+            crossDomain: true,
+            success: function (data) {
+                if (data.result === "done") {
+                    check();
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log("Error... " + textStatus + " " + errorThrown);
@@ -138,22 +146,31 @@
             cache: false,
             datatype: 'json',
             contentType: 'application/json;charset=UTF-8',
+            xhrFields: {
+                withCredentials: true
+            },
             data: {
                 "id": JSON.stringify(id)
             },
-            success: function () {
-                check();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Error... " + textStatus + " " + errorThrown);
+            crossDomain: true
+        }).done(function (data) {
+            if (data.result === "del") {
                 check();
             }
+        }).fail(function (data) {
+            console.log(data);
         })
     }
 
 </script>
 
-<h3 style="text-align: center">Список заданий на сегодня</h3>
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+        <a class="nav-link active" href="http://localhost:8080/todo/logout">Выйти</a>
+    </li>
+</ul>
+
+<h3 style="text-align: center" id="username">Список заданий на сегодня</h3>
 <h5 style="text-align: center"><label class="checkbox"><input type="checkbox" id="show-all" onclick="check()">Показать
     все
     задания/Только не выполненные</label></h5>

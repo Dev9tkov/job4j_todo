@@ -3,6 +3,9 @@ package ru.job4j.service;
 import ru.job4j.model.Item;
 import ru.job4j.model.User;
 
+/**
+ * Класс для проверки и быстрого заполенния БД
+ */
 public class HiberMain {
     public static void main(String[] args) {
         UserService service = UserService.getInstance();
@@ -25,6 +28,7 @@ public class HiberMain {
         itemService.addItem(item2);
 
         itemService.doneItem(3);
+        System.out.println(itemService.haveAnyItems(1));
 
         for (Item val : itemService.findAllItems(1)) {
             System.out.println(val);

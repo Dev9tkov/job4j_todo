@@ -36,4 +36,8 @@ public class ItemService {
     public void doneItem(Integer id) {
         ITEM_STORE.doneItem(id);
     }
+
+    public boolean haveAnyItems(Integer id) {
+        return ITEM_STORE.haveAnyItems(id);
+    }
 }

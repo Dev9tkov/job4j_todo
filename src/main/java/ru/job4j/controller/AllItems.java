@@ -14,15 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllItems extends HttpServlet {
     private final ItemService service = ItemService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/index.html").forward(req, resp);
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
-        System.out.println(user);
-        List<Item> items = service.findAllItems(user.getId());
+        List<Item> items = new ArrayList<>();
+        if (service.haveAnyItems(user.getId())) {
+            items = service.findAllItems(user.getId());
+        }
         PrintWriter pw = resp.getWriter();
         ObjectMapper map = new ObjectMapper();
         String json = map.writeValueAsString(items);

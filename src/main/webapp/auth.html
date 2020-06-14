@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Регистрация пользвателя</title>
+    <title>Авторизация</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -16,35 +16,49 @@
             'password': $('#surname').val(),
         };
         $.ajax({
-            url: 'http://localhost:8080/todo/reg',
-            method: 'POST',
-            contentType: 'application/json',
+            url: 'http://localhost:8080/todo/auth',
             xhrFields: {
                 withCredentials: true
             },
             crossDomain: true,
+            type: 'POST',
+            contentType: 'application/json',
             data: JSON.stringify(send),
             dataType: 'text'
         }).done(function (data) {
-            if (data === 'success') {
+            if (data === 'error') {
                 swal({
-                    text: "Вы успешно зарегистрировались",
-                    icon: "success",
-                    button: "На страницу авторизации",
+                    text: "Вы не зарегистрированы",
+                    icon: "warning",
+                    button: "Зарегистрироваться",
                 }).then((value) => {
                     if (value === true) {
-                        window.location.href = "./auth.html";
+                        window.location.href = "./reg.html";
+                    }
+                });
+            } else {
+                var resp = JSON.parse(data);
+                var userName = resp.name;
+                swal({
+                    title: userName,
+                    text: "Вы успешно авторизованы",
+                    icon: "success",
+                    button: "На страницу todo листа",
+                }).then((value) => {
+                    if (value === true) {
+                        window.location.href = "./index.html";
                     }
                 });
             }
-        });
+        }).fail(function (data) {
+            console.log(data);
+        })
     }
 </script>
 <body>
 <div class="container">
-    <h2 id="out">Регистрация</h2>
+    <h2 id="out">Авторизация</h2>
     <form class="form-horizontal">
-
         <div class="form-group">
             <label class="control-label col-sm-2" for="name">Логин:</label>
             <div class="col-sm-10">

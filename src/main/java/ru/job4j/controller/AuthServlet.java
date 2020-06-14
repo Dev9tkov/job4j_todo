@@ -16,6 +16,12 @@ import java.io.PrintWriter;
 
 public class AuthServlet extends HttpServlet {
     private final UserService service = UserService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/auth.html").forward(req, resp);
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -31,11 +37,16 @@ public class AuthServlet extends HttpServlet {
         String name = node.get("name").asText();
         String pass = node.get("password").asText();
         User user = service.findUser(name);
-        System.out.println(user);
+        ObjectNode resNode = mapper.createObjectNode();
         if (null != user && pass.equals(user.getPassword())) {
+            session.removeAttribute("user");
             session.setAttribute("user", user);
-            pw.append("success");
+            String userName = user.getName();
+            resNode.put("name", userName);
+            String json = mapper.writeValueAsString(resNode);
+            pw.append(json);
         } else {
+            session.setAttribute("user", new User());
             pw.append("error");
         }
         pw.flush();

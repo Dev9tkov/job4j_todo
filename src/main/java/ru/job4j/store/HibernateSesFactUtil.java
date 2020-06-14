@@ -1,6 +1,5 @@
 package ru.job4j.store;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -8,7 +7,6 @@ import org.hibernate.cfg.Environment;
 import ru.job4j.model.Item;
 import ru.job4j.model.User;
 
-import javax.imageio.spi.ServiceRegistry;
 import java.util.Properties;
 
 
@@ -45,7 +43,7 @@ public class HibernateSesFactUtil {
                 settings.put(Environment.DIALECT, app.getProperty("dialect"));
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, app.getProperty("thread"));
                 settings.put(Environment.SHOW_SQL, app.getProperty("show_sql"));
-//                settings.put(Environment.HBM2DDL_AUTO, app.getProperty("hbm2ddl"));
+                settings.put(Environment.HBM2DDL_AUTO, app.getProperty("hbm2ddl"));
 
                 config.setProperties(settings);
                 config.addAnnotatedClass(Item.class);

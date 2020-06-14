@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,9 +31,9 @@ public class RegestrationServlet extends HttpServlet {
 
         String name = node.get("name").asText();
         String pass = node.get("password").asText();
-
+        HttpSession session = req.getSession();
+        session.setAttribute("user", new User());
         service.addUser(new User(name, pass));
-        //добавить обработку такого же пользователя
         pw.append("success");
         pw.flush();
     }

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.job4j.model.Item;
+import ru.job4j.model.User;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -52,12 +53,16 @@ public class ItemStore implements IStore{
     @Override
     public List<Item> getItems(Integer userId) {
         return this.tx(session -> {
-            Query query = session.createQuery("FROM ru.job4j.model.Item AS i WHERE i.user.id= :id");
+            List<Item> rsl = null;
+            Query query = session.createQuery("select usr from j_user usr join fetch usr.items where usr.id =:id", User.class);
             query.setParameter("id", userId);
-            return (List<Item>) query.getResultList();
+            User user = (User) query.getSingleResult();
+            if (user.getItems().size() > 0) {
+                rsl = user.getItems();
+            }
+            return rsl;
         });
     }
-
 
     /**
      * Показать только те заявки, которые ожидают выполнения
@@ -82,5 +87,15 @@ public class ItemStore implements IStore{
         this.tx(session -> session.createQuery("update Item as I set done = false where I.id = :id")
                 .setParameter("id", id)
                 .executeUpdate());
+    }
+
+    @Override
+    public boolean haveAnyItems(Integer id) {
+        return this.tx(session -> {
+            Query query = session.createQuery("FROM ru.job4j.model.Item AS i WHERE i.user.id= :id");
+            query.setParameter("id", id);
+            List<Item> items = query.getResultList();
+            return !items.isEmpty();
+        });
     }
 }
