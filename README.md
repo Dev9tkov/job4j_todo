@@ -1,7 +1,7 @@
 # job4j_todo
 TodoList
 
-![hall](https://github.com/Dev9tkov/job4j_todo/src/main/resources/todo.gif)
+![hall](https://github.com/Dev9tkov/job4j_todo/blob/master/src/main/resources/todo.gif)
 
 Необходимо создать простое приложение todolist
  * Авторизация и регистрация пользователя. У каждого пользователя свой todolist.
